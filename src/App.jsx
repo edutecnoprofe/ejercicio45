@@ -249,6 +249,7 @@ function App() {
           formatted={currentExercise.duration ? formatted : `${currentExercise.reps}`}
           label={currentExercise.duration ? 'Tiempo' : 'Reps'}
           isRunning={isRunning}
+          onClick={currentExercise.duration ? handleToggle : handleRepsComplete}
         />
       </div>
 

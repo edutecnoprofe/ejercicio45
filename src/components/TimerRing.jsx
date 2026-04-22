@@ -5,12 +5,24 @@ const STROKE = 18;
 const R = (SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * R;
 
-export function TimerRing({ secondsLeft, totalSeconds, formatted, label, isRunning }) {
+export function TimerRing({ secondsLeft, totalSeconds, formatted, label, isRunning, onClick }) {
   const progress = totalSeconds > 0 ? secondsLeft / totalSeconds : 1;
   const strokeDashoffset = CIRCUMFERENCE * (1 - progress);
 
+  const handleKeyDown = (e) => {
+    if ((e.key === 'Enter' || e.key === ' ') && onClick) {
+      onClick();
+    }
+  };
+
   return (
-    <div className="timer-ring-wrapper">
+    <div 
+      className="timer-ring-wrapper" 
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+    >
       <svg className="timer-ring-svg" viewBox={`0 0 ${SIZE} ${SIZE}`}>
         {/* Track */}
         <circle
@@ -35,8 +47,10 @@ export function TimerRing({ secondsLeft, totalSeconds, formatted, label, isRunni
       <div className="timer-ring-text">
         <span className="timer-ring-time">{formatted}</span>
         <span className="timer-ring-label">{label}</span>
-        {isRunning && <span className="timer-ring-indicator">●</span>}
       </div>
+      {isRunning && <span className="timer-ring-indicator">●</span>}
     </div>
   );
 }
+
+
