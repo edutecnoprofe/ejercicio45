@@ -1,0 +1,53 @@
+.session-progress {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.session-progress-bar {
+  display: flex;
+  gap: 4px;
+  height: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.segment {
+  position: relative;
+  height: 100%;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.1);
+  transition: background 0.4s ease;
+}
+
+.segment.done {
+  background: var(--seg-color, #FF5C00);
+  opacity: 0.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.segment.active {
+  background: var(--seg-color, #FF5C00);
+  box-shadow: 0 0 10px var(--seg-color, #FF5C00);
+  animation: pulse-seg 1.5s infinite;
+}
+
+.seg-check {
+  font-size: 7px;
+  color: white;
+}
+
+.session-progress-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+@keyframes pulse-seg {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
