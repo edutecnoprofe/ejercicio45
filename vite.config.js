@@ -21,14 +21,16 @@ export default defineConfig({
         orientation: 'any',
         icons: [
           {
-            src: 'https://fakeimg.pl/192x192/ff5c00/06080F?text=GYM',
+            src: 'icon-512.png',
             sizes: '192x192',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any maskable'
           },
           {
-            src: 'https://fakeimg.pl/512x512/ff5c00/06080F?text=GYM',
+            src: 'icon-512.png',
             sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any maskable'
           }
         ]
       }
