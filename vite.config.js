@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  base: '/ejercicio45/', // Ruta para GitHub Pages
   plugins: [
     react(),
     VitePWA({
