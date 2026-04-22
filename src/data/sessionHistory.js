@@ -9,8 +9,6 @@
 import { sessions, SESSION_MUSCLE_GROUPS } from './sessions'
 
 const STORAGE_KEY = 'ejercicio45_session_history'
-const MAX_HISTORY_DAYS = 7
-
 /** @typedef {{ sessionId: string, date: string, timestamp: number }} HistoryEntry */
 
 // ─── Persistencia ─────────────────────────────────────────────────────
@@ -35,10 +33,15 @@ export function saveSessionToHistory(sessionId) {
     date: new Date(now).toLocaleDateString('es-ES'),
     timestamp: now,
   })
-  // Mantener sólo los últimos MAX_HISTORY_DAYS días
-  const cutoff = now - MAX_HISTORY_DAYS * 24 * 60 * 60 * 1000
-  const trimmed = history.filter(e => e.timestamp > cutoff)
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed.slice(0, 30)))
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(history))
+}
+
+/** Borra una entrada específica del historial por su timestamp */
+export function deleteSessionFromHistory(timestamp) {
+  const history = getHistory()
+  const updated = history.filter(e => e.timestamp !== timestamp)
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
+  return updated
 }
 
 // ─── Lógica de Sugerencias ─────────────────────────────────────────────
@@ -157,10 +160,6 @@ export function mergeHistories(remoteHistory) {
     })
     .sort((a, b) => b.timestamp - a.timestamp) // más reciente primero
 
-  // Respetar el límite de 7 días
-  const cutoff = Date.now() - MAX_HISTORY_DAYS * 24 * 60 * 60 * 1000
-  const trimmed = merged.filter(e => e.timestamp > cutoff).slice(0, 30)
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed))
-  return trimmed
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(merged))
+  return merged
 }

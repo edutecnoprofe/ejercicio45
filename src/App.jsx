@@ -32,6 +32,7 @@ function App() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [ytPlayer, setYtPlayer]         = useState(null)
   const [musicState, setMusicState]     = useState('Pausado')
+  const [noMusic, setNoMusic]           = useState(false)
 
   const currentExercise = routine[currentIndex] ?? null
   const nextExercise    = routine[currentIndex + 1] ?? null
@@ -52,7 +53,14 @@ function App() {
       const timeout = setTimeout(handleNext, 1500)
       return () => clearTimeout(timeout)
     }
-  }, [timerDone])
+  }, [timerDone, screen])
+
+  // Pausar música si marca "Sin música"
+  useEffect(() => {
+    if (noMusic && ytPlayer?.getPlayerState() === 1) {
+      ytPlayer.pauseVideo()
+    }
+  }, [noMusic, ytPlayer])
 
   // ─── Handlers de flujo ──────────────────────────────────────────────
 
@@ -100,12 +108,17 @@ function App() {
   }
 
   // ─── Controles YouTube ───────────────────────────────────────────────
-  const onPlayerReady    = (e) => setYtPlayer(e.target)
+  const onPlayerReady    = (e) => {
+    const player = e.target
+    player.setShuffle(true)
+    setYtPlayer(player)
+  }
   const onStateChange    = (e) => {
     setMusicState(e.data === YouTube.PlayerState?.PLAYING ? 'Sonando' : 'Pausado')
   }
   const handleMusicToggle = () => {
     if (!ytPlayer) return
+    if (noMusic) setNoMusic(false)
     ytPlayer.getPlayerState() === 1 ? ytPlayer.pauseVideo() : ytPlayer.playVideo()
   }
 
@@ -113,13 +126,13 @@ function App() {
   const handleToggle = () => {
     const willRun = !isRunning
     toggle()
-    if (ytPlayer) {
+    if (ytPlayer && !noMusic) {
       willRun ? ytPlayer.playVideo() : ytPlayer.pauseVideo()
     }
   }
 
   const handleRepsComplete = () => {
-    if (ytPlayer) {
+    if (ytPlayer && !noMusic) {
       const state = ytPlayer.getPlayerState()
       if (state !== 1) ytPlayer.playVideo()
     }
@@ -284,15 +297,25 @@ function App() {
       <div className="music-panel">
         <div className="music-widget glass-panel">
           <div className="music-info">
-            <h4>Música de Fondo</h4>
-            <p style={{ color: 'var(--accent-cyan)' }}>YouTube · {musicState}</p>
+            <h4 style={{ margin: '0 0 0.5rem 0' }}>Música de Fondo</h4>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+              <p style={{ color: 'var(--accent-cyan)', margin: 0 }}>YouTube · {musicState}</p>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                <input 
+                  type="checkbox" 
+                  checked={noMusic} 
+                  onChange={(e) => setNoMusic(e.target.checked)} 
+                />
+                Sin música
+              </label>
+            </div>
           </div>
-          <div className="music-controls">
-            <button className="music-btn" onClick={() => ytPlayer?.previousVideo()}>⏮</button>
-            <button className="music-btn music-btn--main" onClick={handleMusicToggle}>
+          <div className="music-controls" style={{ opacity: noMusic ? 0.3 : 1, pointerEvents: noMusic ? 'none' : 'auto' }}>
+            <button className="music-btn" onClick={() => ytPlayer?.previousVideo()} disabled={noMusic}>⏮</button>
+            <button className="music-btn music-btn--main" onClick={handleMusicToggle} disabled={noMusic}>
               {musicState === 'Sonando' ? '⏸' : '▶'}
             </button>
-            <button className="music-btn" onClick={() => ytPlayer?.nextVideo()}>⏭</button>
+            <button className="music-btn" onClick={() => ytPlayer?.nextVideo()} disabled={noMusic}>⏭</button>
           </div>
         </div>
       </div>

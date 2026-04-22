@@ -23,8 +23,8 @@
 }
 
 .segment.done {
-  background: var(--seg-color, #FF5C00);
-  opacity: 0.6;
+  background: #A855F7;
+  opacity: 0.8;
   display: flex;
   align-items: center;
   justify-content: center;

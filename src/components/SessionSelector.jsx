@@ -7,6 +7,7 @@
 import { useState, useEffect } from 'react'
 import { getSuggestedSessions, getRecentHistory } from '../data/sessionHistory'
 import { SyncScreen } from './SyncScreen'
+import { HistoryModal } from './HistoryModal'
 
 const TYPE_ICON_BG = {
   LOWER_BODY: 'linear-gradient(135deg, #FF5C00 0%, #FF9500 100%)',
@@ -33,6 +34,7 @@ export function SessionSelector({ onSelect }) {
   const [recentHistory, setRecentHistory] = useState([])
   const [hoveredId, setHoveredId] = useState(null)
   const [showSync, setShowSync] = useState(false)
+  const [showHistory, setShowHistory] = useState(false)
 
   // Abrir sync automáticamente si venimos de un QR escaneado
   useEffect(() => {
@@ -55,6 +57,8 @@ export function SessionSelector({ onSelect }) {
     <div className="selector-screen">
       {/* Modal de sincronización P2P */}
       {showSync && <SyncScreen onClose={handleSyncClose} />}
+      {/* Modal de Historial Completo */}
+      {showHistory && <HistoryModal onClose={() => setShowHistory(false)} onChange={() => { setSuggested(getSuggestedSessions()); setRecentHistory(getRecentHistory(3)); }} />}
       {/* Header */}
       <div className="selector-header">
         <div className="selector-greeting">
@@ -71,8 +75,8 @@ export function SessionSelector({ onSelect }) {
 
         {/* Historial reciente */}
         {recentHistory.length > 0 && (
-          <div className="recent-history">
-            <span className="history-label">Últimas sesiones:</span>
+          <div className="recent-history" onClick={() => setShowHistory(true)} style={{ cursor: 'pointer' }} title="Ver historial completo">
+            <span className="history-label">Últimas sesiones (click para más):</span>
             <div className="history-pills">
               {recentHistory.map((entry, i) => (
                 <span key={i} className="history-pill">
