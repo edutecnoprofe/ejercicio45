@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect } from 'react'
-import { getSuggestedSessions, getRecentHistory } from '../data/sessionHistory'
+import { getSuggestedSessions, getRecentHistory, saveFreeActivityToHistory, FREE_ACTIVITIES } from '../data/sessionHistory'
 import { SyncScreen } from './SyncScreen'
 import { HistoryModal } from './HistoryModal'
 
@@ -36,6 +36,11 @@ export function SessionSelector({ onSelect }) {
   const [showSync, setShowSync] = useState(false)
   const [showHistory, setShowHistory] = useState(false)
 
+  // Estado para actividad libre
+  const [selectedActivity, setSelectedActivity] = useState(null)
+  const [durationMin, setDurationMin] = useState(30)
+  const [freeActivitySaved, setFreeActivitySaved] = useState(false)
+
   // Abrir sync automáticamente si venimos de un QR escaneado
   useEffect(() => {
     setSuggested(getSuggestedSessions())
@@ -51,6 +56,17 @@ export function SessionSelector({ onSelect }) {
     setShowSync(false)
     setSuggested(getSuggestedSessions())
     setRecentHistory(getRecentHistory(3))
+  }
+
+  // Guardar actividad libre
+  const handleSaveFreeActivity = () => {
+    if (!selectedActivity) return
+    saveFreeActivityToHistory(selectedActivity, durationMin)
+    setFreeActivitySaved(true)
+    setSelectedActivity(null)
+    setDurationMin(30)
+    setRecentHistory(getRecentHistory(3))
+    setTimeout(() => setFreeActivitySaved(false), 2500)
   }
 
   return (
@@ -153,6 +169,70 @@ export function SessionSelector({ onSelect }) {
             <div className="session-card-arrow">›</div>
           </button>
         ))}
+      </div>
+
+      {/* ─── Actividad Libre ─────────────────────────────────────────── */}
+      <div className="free-activity-section">
+        <h2 className="free-activity-title">🏅 Registrar Actividad Libre</h2>
+        <p className="free-activity-subtitle">
+          ¿Hiciste algo fuera del plan? Regístralo para que cuente en tu historial.
+        </p>
+
+        {/* Selector de tipo */}
+        <div className="free-activity-types">
+          {Object.values(FREE_ACTIVITIES).map(act => (
+            <button
+              key={act.id}
+              id={`btn-free-${act.id.toLowerCase()}`}
+              className={`free-activity-btn ${selectedActivity === act.id ? 'free-activity-btn--active' : ''}`}
+              style={{ '--act-color': act.color }}
+              onClick={() => setSelectedActivity(prev => prev === act.id ? null : act.id)}
+            >
+              <span className="free-activity-btn-icon">{act.icon}</span>
+              <span className="free-activity-btn-label">{act.label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Selector de duración + botón guardar */}
+        {selectedActivity && (
+          <div className="free-activity-duration-row">
+            <label className="free-activity-duration-label">⏱ Duración</label>
+            <div className="free-activity-duration-controls">
+              <button
+                className="duration-step-btn"
+                onClick={() => setDurationMin(m => Math.max(5, m - 5))}
+              >−</button>
+              <span className="duration-display">{durationMin} min</span>
+              <button
+                className="duration-step-btn"
+                onClick={() => setDurationMin(m => Math.min(300, m + 5))}
+              >+</button>
+            </div>
+            <input
+              id="free-activity-duration-range"
+              type="range"
+              min="5" max="180" step="5"
+              value={durationMin}
+              onChange={e => setDurationMin(Number(e.target.value))}
+              className="duration-range"
+            />
+            <button
+              id="btn-save-free-activity"
+              className="btn-save-activity"
+              onClick={handleSaveFreeActivity}
+            >
+              ✅ Guardar actividad
+            </button>
+          </div>
+        )}
+
+        {/* Confirmación */}
+        {freeActivitySaved && (
+          <div className="free-activity-saved-msg">
+            ✓ ¡Actividad registrada en tu historial!
+          </div>
+        )}
       </div>
     </div>
   )

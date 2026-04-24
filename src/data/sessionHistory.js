@@ -9,7 +9,16 @@
 import { sessions, SESSION_MUSCLE_GROUPS } from './sessions'
 
 const STORAGE_KEY = 'ejercicio45_session_history'
-/** @typedef {{ sessionId: string, date: string, timestamp: number }} HistoryEntry */
+/**
+ * @typedef {{ sessionId: string|null, date: string, timestamp: number, activityType?: string, durationMin?: number }} HistoryEntry
+ */
+
+/** Actividades libres disponibles */
+export const FREE_ACTIVITIES = {
+  FREE_EXERCISE: { id: 'FREE_EXERCISE', label: 'Ejercicio Libre', icon: '🏃', color: '#22c55e' },
+  RUNNING:       { id: 'RUNNING',       label: 'Día de Correr',   icon: '👟', color: '#f97316' },
+  ROWING:        { id: 'ROWING',        label: 'Día de Remo',     icon: '🚣', color: '#3b82f6' },
+}
 
 // ─── Persistencia ─────────────────────────────────────────────────────
 
@@ -30,6 +39,24 @@ export function saveSessionToHistory(sessionId) {
   const now = Date.now()
   history.unshift({
     sessionId,
+    date: new Date(now).toLocaleDateString('es-ES'),
+    timestamp: now,
+  })
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(history))
+}
+
+/**
+ * Guarda una actividad libre (correr, remo, ejercicio libre) con su duración.
+ * @param {string} activityType - ID de FREE_ACTIVITIES
+ * @param {number} durationMin  - Duración en minutos
+ */
+export function saveFreeActivityToHistory(activityType, durationMin) {
+  const history = getHistory()
+  const now = Date.now()
+  history.unshift({
+    sessionId: null,
+    activityType,
+    durationMin,
     date: new Date(now).toLocaleDateString('es-ES'),
     timestamp: now,
   })

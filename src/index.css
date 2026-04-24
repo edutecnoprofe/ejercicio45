@@ -1,4 +1,4 @@
-﻿/* index.css - Home Gym High-End Fitness PWA */
+/* index.css - Home Gym High-End Fitness PWA */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
 
@@ -828,3 +828,223 @@ body {
 }
 .sync-log-line { font-size: 0.72rem; color: rgba(255,255,255,0.3); font-family: monospace; line-height: 1.4; }
 .sync-log-line:last-child { color: rgba(255,255,255,0.6); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   FREE ACTIVITY SECTION
+═══════════════════════════════════════════════════════════════════ */
+
+.free-activity-section {
+  width: 100%;
+  max-width: 700px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.free-activity-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.free-activity-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Buttons for type selection */
+.free-activity-types {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.free-activity-btn {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.9rem 0.75rem;
+  border-radius: 16px;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.free-activity-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--act-color, #fff);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.free-activity-btn--active {
+  background: color-mix(in srgb, var(--act-color) 18%, transparent);
+  border-color: var(--act-color);
+  color: var(--act-color);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--act-color) 30%, transparent);
+}
+
+.free-activity-btn-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.free-activity-btn-label {
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Duration row */
+.free-activity-duration-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.free-activity-duration-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.free-activity-duration-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.duration-step-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  font-family: 'Outfit', sans-serif;
+  flex-shrink: 0;
+}
+
+.duration-step-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+.duration-step-btn:active {
+  transform: scale(0.95);
+}
+
+.duration-display {
+  font-size: 1.6rem;
+  font-weight: 800;
+  min-width: 90px;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+/* Range input */
+.duration-range {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  outline: none;
+  cursor: pointer;
+}
+
+.duration-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent-orange);
+  box-shadow: 0 0 10px rgba(255, 92, 0, 0.5);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.duration-range::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.duration-range::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent-orange);
+  border: none;
+  cursor: pointer;
+}
+
+/* Save button */
+.btn-save-activity {
+  width: 100%;
+  padding: 0.9rem 1.5rem;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  border: none;
+  border-radius: 100px;
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.3);
+}
+
+.btn-save-activity:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 24px rgba(34, 197, 94, 0.5);
+}
+
+.btn-save-activity:active {
+  transform: scale(0.98);
+}
+
+/* Saved confirmation */
+.free-activity-saved-msg {
+  text-align: center;
+  padding: 0.75rem 1rem;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 12px;
+  color: #4ade80;
+  font-weight: 600;
+  font-size: 0.95rem;
+  animation: fadeIn 0.25s ease;
+}
+
+/* sync-modal (used by HistoryModal) */
+.sync-modal {
+  background: rgba(10, 12, 20, 0.97);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 24px;
+  padding: 2rem;
+  width: 100%;
+  position: relative;
+  animation: slideUp 0.3s cubic-bezier(0.4,0,0.2,1);
+}
